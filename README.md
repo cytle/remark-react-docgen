@@ -23,41 +23,39 @@ const doc = vfile.readSync('README.md');
 console.log(remark().use(reactDocgen).processSync(doc).contents);
 ```
 
-The Component [`Column.tsx`](./__tests__/components/tsx/Column.tsx)
+The Component [`Column.jsx`](./__tests__/components/jsx/Column.jsx)
 
-``` tsx
+``` jsx
 import * as React from "react";
-
-/**
- * Column properties.
- */
-export interface IColumnProps {
-  /**
-   * prop1 description
-   */
-  prop1?: string;
-  /** prop2 description */
-  prop2: number;
-  /**
-   * prop3 description a | b
-   */
-  prop3: () => void;
-  /** prop4 description 中文 */
-  prop4: "option1" | "option2" | "option3";
-}
+import PropTypes from 'prop-types';
 
 /**
  * Form column.
  */
-export class Column extends React.Component<IColumnProps> {
-  static defaultProps = {
-    prop1: "red",
-  };
-
-  render() {
-    return <div>Test</div>;
-  }
+export const Column = () => {
+  return <div>Test</div>;
 }
+
+Column.propTypes = {
+  /**
+   * prop1 description
+   */
+  prop1: PropTypes.string,
+  /** prop2 description */
+  prop2: PropTypes.number.isRequired,
+  /**
+   * prop3 description a | b
+   */
+  prop3: PropTypes.func().isRequired,
+  /** prop4 description 中文 */
+  prop4: PropTypes.isRequired.oneOf(["option1", "option2" ,"option3"]),
+};
+
+Column.defaultProps = {
+  prop1: "red",
+  prop5: "default",
+};
+
 ```
 
 Convert the following Markdown:
@@ -67,7 +65,7 @@ Convert the following Markdown:
 
 ## API
 
-[Column](./Column.tsx "react-docgen:")
+[Column](./Column.jsx "react-docgen:")
 ```
 
 Into
@@ -87,8 +85,9 @@ Form column.
 | ------------------ | ----------------------------------- | ------------- | ------------------------ |
 | prop1              | string                              | "red"         | prop1 description        |
 | prop2 _(required)_ | number                              |               | prop2 description        |
-| prop3 _(required)_ | () => void                          |               | prop3 description a \| b |
+| prop3 _(required)_ | func                                |               | prop3 description a \| b |
 | prop4 _(required)_ | "option1" \| "option2" \| "option3" |               | prop4 description 中文   |
+| prop5              |                                     | "default"     |                          |
 ```
 
 ## Options
