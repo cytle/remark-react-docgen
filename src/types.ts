@@ -1,13 +1,17 @@
 import { Node } from 'unist';
-import { ParserOptions, ComponentDoc, FileParser } from 'react-docgen-typescript';
+import { DocumentationObject } from "../types/react-docgen/dist/Documentation";
+import { Options } from '../types/react-docgen/dist/babelParser';
+import { Handler, Resolver } from '../types/react-docgen/dist/types';
 
-export type ReactDocgenTypescriptRender = (docs: ComponentDoc[]) => Node;
+export type ReactDocgenRender = (docs: DocumentationObject[]) => Node;
 
-export type ReactDocgenTypescriptOptions = ParserOptions & {
+export type ReactDocgenOptions = {
   /**
    * Custom document rendering
    * @default defaultRender
    */
-  render?: ReactDocgenTypescriptRender;
-  fileParser?: FileParser;
+  render?: ReactDocgenRender;
+  resolver?: Resolver;
+  handlers?: Array<Handler>;
+  options?: Options;
 };

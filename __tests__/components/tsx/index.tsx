@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Component } from "react";
 
 /**
  * Column properties.
@@ -7,7 +6,6 @@ import { Component } from "react";
 export interface IColumnProps {
   /**
    * prop1 description
-   * @default "red"
    */
   prop1?: string;
   /** prop2 description */
@@ -23,7 +21,11 @@ export interface IColumnProps {
 /**
  * Form column.
  */
-export class Column extends Component<IColumnProps> {
+export class Column extends React.Component<IColumnProps> {
+  static defaultProps = {
+    prop1: "red",
+  };
+
   render() {
     return <div>Test</div>;
   }

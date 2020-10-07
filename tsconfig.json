@@ -17,10 +17,15 @@
     "noUnusedParameters": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "baseUrl": "./",
+    "paths": {
+      "react-docgen": ["types/react-docgen"]
+    }
   },
   "include": [
     "src/**/*",
-    "__tests__/**/*"
+    "__tests__/**/*",
+    "types/**/*"
   ]
 }

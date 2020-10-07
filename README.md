@@ -23,32 +23,37 @@ const doc = vfile.readSync('README.md');
 console.log(remark().use(reactDocgen).processSync(doc).contents);
 ```
 
-The Component [`Column.tsx`](./__tests__/components/Column/Column.tsx)
+The Component [`Column.tsx`](./__tests__/components/tsx/Column.tsx)
 
 ``` tsx
 import * as React from "react";
-import { Component } from "react";
 
 /**
  * Column properties.
  */
 export interface IColumnProps {
-  /** prop1 description */
+  /**
+   * prop1 description
+   */
   prop1?: string;
   /** prop2 description */
   prop2: number;
   /**
-   * prop3 description
+   * prop3 description a | b
    */
   prop3: () => void;
-  /** prop4 description */
+  /** prop4 description 中文 */
   prop4: "option1" | "option2" | "option3";
 }
 
 /**
  * Form column.
  */
-export class Column extends Component<IColumnProps> {
+export class Column extends React.Component<IColumnProps> {
+  static defaultProps = {
+    prop1: "red",
+  };
+
   render() {
     return <div>Test</div>;
   }
@@ -97,19 +102,22 @@ Custom document rendering
 ``` ts
 import * as remark from 'remark';
 import * as reactDocgen from 'remark-react-docgen';
-import { reactDocgenRender } from 'remark-react-docgen/build/types';
+import { ReactDocgenRender } from 'remark-react-docgen/build/types';
 import * as vfile from 'to-vfile';
 import * as stringWidth from 'string-width';
-import { componentDocTableMdastBuilder } from 'react-docgen-markdown-render';
+import { tableMdastBuilder } from 'react-docgen-markdown-render';
 
-const tableRender = (componentDoc: ComponentDoc): Table => componentDocTableMdastBuilder(componentDoc, [
-  { title: '属性', render: (vo) => u('strong', [u('text', vo.name)]) },
-  { title: '描述', render: (vo) => vo.description,},
-  { title: '类型', render: (vo) => u('inlineCode', vo.type.name) },
-  { title: '默认值', render: (vo) => vo.defaultValue ? vo.defaultValue.value : '-' },
-]);
+const tableRender = (doc: DocumentationObject): Table => {
+  const dataSource = Object.keys(doc.props).map(name => ({...doc.props[name], name}));
+  return tableMdastBuilder(dataSource, [
+    { title: '属性', render: (vo) => u('strong', [u('text', vo.name)]) },
+    { title: '描述', render: (vo) => vo.description,},
+    { title: '类型', render: (vo) => u('inlineCode', generatePropType(vo)) },
+    { title: '默认值', render: (vo) => vo.defaultValue ? vo.defaultValue.value : '-' },
+  ])
+};
 
-const render: reactDocgenRender = (docs) => u('root', docs.map(vo => tableRender(vo)));;
+const render: ReactDocgenRender = (docs) => u('root', docs.map(vo => tableRender(vo)));
 
 const doc = vfile.readSync('README.md');
 
